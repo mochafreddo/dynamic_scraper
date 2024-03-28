@@ -22,7 +22,7 @@ class WantedScraper:
             )
 
             for _ in range(5):
-                time.sleep(1)
+                time.sleep(5)
                 self.page.keyboard.down("End")
 
             content = self.page.content()
