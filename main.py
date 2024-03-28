@@ -1,6 +1,7 @@
 import time
 
 from bs4 import BeautifulSoup
+from flask import Flask
 from playwright.sync_api import sync_playwright
 
 from file import write_to_csv
@@ -52,6 +53,14 @@ if __name__ == "__main__":
         "kotlin",
     ]
 
-    for keyword in keywords:
-        scraper = WantedScraper(keyword)
-        scraper.start()
+    # for keyword in keywords:
+    #     scraper = WantedScraper(keyword)
+    #     scraper.start()
+
+    app = Flask("JabScrapper")
+
+    @app.route("/")
+    def home():
+        return "hey there!"
+
+    app.run("0.0.0.0", port=3000)
