@@ -1,7 +1,7 @@
 import time
 
 from bs4 import BeautifulSoup
-from flask import Flask
+from flask import Flask, render_template
 from playwright.sync_api import sync_playwright
 
 from file import write_to_csv
@@ -61,6 +61,10 @@ if __name__ == "__main__":
 
     @app.route("/")
     def home():
-        return "hey there!"
+        return render_template("home.html", name="Geoffrey")
+
+    @app.route("/hello")
+    def hello():
+        return "hello you!"
 
     app.run("0.0.0.0", port=3000)
