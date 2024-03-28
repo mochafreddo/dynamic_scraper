@@ -1,28 +1,30 @@
-# WantedScraper
+# JobScrapper
 
-WantedScraper is a Python tool designed to scrape job listings from the website Wanted.co.kr based on a given keyword. It utilizes the Playwright library for web scraping and BeautifulSoup for parsing the scraped HTML content.
+JobScrapper is a Flask web application designed to scrape job listings from Wanted.co.kr based on user input keywords. It uses Playwright for web scraping and BeautifulSoup for parsing HTML content.
 
 ## Features
 
-- Scrapes job listings based on a keyword.
-- Extracts job title, company name, and job listing link.
-- Saves the scraped data into a CSV file named `<keyword>_jobs.csv`.
+- Web interface for entering search keywords.
+- Scrapes job listings from Wanted.co.kr based on the keyword.
+- Displays job title, company name, and a link to the job listing.
+- Option to export the scraped job listings into a CSV file.
 
 ## Requirements
 
 - Python 3.x
+- Flask
 - BeautifulSoup
 - Playwright
 
 ## Installation
 
-First, ensure you have Python installed. Then, install the required Python packages using pip:
+Ensure Python is installed, then install the required packages:
 
 ```bash
-pip install beautifulsoup4 playwright
+pip install Flask beautifulsoup4 playwright
 ```
 
-You may need to run the Playwright install command to download the necessary browser binaries:
+Run the Playwright install command to download necessary browser binaries:
 
 ```bash
 playwright install
@@ -30,13 +32,13 @@ playwright install
 
 ## Usage
 
-To use WantedScraper, run the `main.py` script with the desired keyword as an argument:
+To start the web application, run:
 
 ```bash
-python main.py <keyword>
+python main.py
 ```
 
-Replace `<keyword>` with the actual keyword you want to search for.
+Navigate to `http://localhost:3000` in your web browser, enter a search keyword, and view the results.
 
 ## License
 
