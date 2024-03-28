@@ -41,7 +41,3 @@ Replace `<keyword>` with the actual keyword you want to search for.
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-```
-
-```
