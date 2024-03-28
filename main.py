@@ -5,39 +5,46 @@ from bs4 import BeautifulSoup
 from playwright.sync_api import sync_playwright
 
 
-def main():
-    with sync_playwright() as p:
-        browser = p.chromium.launch(headless=False)
-        page = browser.new_page()
-        page.goto("https://www.wanted.co.kr/search?query=flutter&tab=position")
+class WantedScraper:
+    def __init__(self):
+        self.browser = None
+        self.page = None
 
-        for _ in range(5):
-            time.sleep(5)
-            page.keyboard.down("End")
+    def start(self):
+        with sync_playwright() as p:
+            self.browser = p.chromium.launch(headless=False)
+            self.page = self.browser.new_page()
+            self.page.goto("https://www.wanted.co.kr/search?query=flutter&tab=position")
 
-        content = page.content()
-        browser.close()
+            for _ in range(5):
+                time.sleep(5)
+                self.page.keyboard.down("End")
 
-    soup = BeautifulSoup(content, "html.parser")
-    jobs = soup.select("div.JobCard_container__FqChn")
+            content = self.page.content()
+            self.browser.close()
 
-    jobs_data = []
-    for job in jobs:
-        link = f"https://www.wanted.co.kr{job.find('a')['href']}"
-        title = job.find("strong", class_="JobCard_title__ddkwM").text
-        company_name = job.find("span", class_="JobCard_companyContent__zUT91").text
-        jobs_data.append({"title": title, "company_name": company_name, "link": link})
+        soup = BeautifulSoup(content, "html.parser")
+        jobs = soup.select("div.JobCard_container__FqChn")
 
-    write_to_csv(jobs_data)
+        jobs_data = []
+        for job in jobs:
+            link = f"https://www.wanted.co.kr{job.find('a')['href']}"
+            title = job.find("strong", class_="JobCard_title__ddkwM").text
+            company_name = job.find("span", class_="JobCard_companyContent__zUT91").text
+            jobs_data.append(
+                {"title": title, "company_name": company_name, "link": link}
+            )
 
+        self.write_to_csv(jobs_data)
 
-def write_to_csv(jobs_data):
-    fieldnames = ["Title", "Company", "Link"]
-    with open("jobs.csv", "w", newline="") as file:
-        writer = csv.DictWriter(file, fieldnames=fieldnames)
-        writer.writeheader()
-        writer.writerows(jobs_data)
+    def write_to_csv(self, jobs_data):
+        fieldnames = ["Title", "Company", "Link"]
+        with open("jobs.csv", "w", newline="") as file:
+            writer = csv.DictWriter(file, fieldnames=fieldnames)
+            writer.writeheader()
+            writer.writerows(jobs_data)
 
 
 if __name__ == "__main__":
-    main()
+    scraper = WantedScraper()
+    scraper.start()
