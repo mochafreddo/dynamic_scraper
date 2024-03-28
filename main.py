@@ -1,8 +1,9 @@
-import csv
 import time
 
 from bs4 import BeautifulSoup
 from playwright.sync_api import sync_playwright
+
+from file import write_to_csv
 
 
 class WantedScraper:
@@ -20,7 +21,7 @@ class WantedScraper:
             )
 
             for _ in range(5):
-                time.sleep(5)
+                time.sleep(1)
                 self.page.keyboard.down("End")
 
             content = self.page.content()
@@ -41,11 +42,7 @@ class WantedScraper:
         self.write_to_csv(jobs_data)
 
     def write_to_csv(self, jobs_data):
-        fieldnames = ["Title", "Company", "Link"]
-        with open(f"{self.keyword}_jobs.csv", "w", newline="") as file:
-            writer = csv.DictWriter(file, fieldnames=fieldnames)
-            writer.writeheader()
-            writer.writerows(jobs_data)
+        write_to_csv(self.keyword, jobs_data)
 
 
 if __name__ == "__main__":
