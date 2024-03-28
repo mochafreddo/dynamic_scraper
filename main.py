@@ -6,15 +6,18 @@ from playwright.sync_api import sync_playwright
 
 
 class WantedScraper:
-    def __init__(self):
+    def __init__(self, keyword):
         self.browser = None
         self.page = None
+        self.keyword = keyword
 
     def start(self):
         with sync_playwright() as p:
             self.browser = p.chromium.launch(headless=False)
             self.page = self.browser.new_page()
-            self.page.goto("https://www.wanted.co.kr/search?query=flutter&tab=position")
+            self.page.goto(
+                f"https://www.wanted.co.kr/search?query={self.keyword}&tab=position"
+            )
 
             for _ in range(5):
                 time.sleep(5)
@@ -39,12 +42,19 @@ class WantedScraper:
 
     def write_to_csv(self, jobs_data):
         fieldnames = ["Title", "Company", "Link"]
-        with open("jobs.csv", "w", newline="") as file:
+        with open(f"{self.keyword}_jobs.csv", "w", newline="") as file:
             writer = csv.DictWriter(file, fieldnames=fieldnames)
             writer.writeheader()
             writer.writerows(jobs_data)
 
 
 if __name__ == "__main__":
-    scraper = WantedScraper()
-    scraper.start()
+    keywords = [
+        "flutter",
+        "nextjs",
+        "kotlin",
+    ]
+
+    for keyword in keywords:
+        scraper = WantedScraper(keyword)
+        scraper.start()
