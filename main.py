@@ -1,7 +1,7 @@
 import time
 
 from bs4 import BeautifulSoup
-from flask import Flask, render_template
+from flask import Flask, render_template, request
 from playwright.sync_api import sync_playwright
 
 from file import write_to_csv
@@ -40,22 +40,19 @@ class WantedScraper:
                 {"title": title, "company_name": company_name, "link": link}
             )
 
-        self.write_to_csv(jobs_data)
+        # self.write_to_csv(jobs_data)
+        return jobs_data
 
     def write_to_csv(self, jobs_data):
         write_to_csv(self.keyword, jobs_data)
 
 
 if __name__ == "__main__":
-    keywords = [
-        "flutter",
-        "nextjs",
-        "kotlin",
-    ]
-
-    # for keyword in keywords:
-    #     scraper = WantedScraper(keyword)
-    #     scraper.start()
+    # keywords = [
+    #     "flutter",
+    #     "nextjs",
+    #     "kotlin",
+    # ]
 
     app = Flask("JabScrapper")
 
@@ -65,6 +62,9 @@ if __name__ == "__main__":
 
     @app.route("/search")
     def hello():
-        return render_template("search.html")
+        keyword = request.args.get("keyword")
+        scraper = WantedScraper(keyword)
+        jobs = scraper.start()
+        return render_template("search.html", keyword=keyword, jobs=jobs)
 
     app.run("0.0.0.0", port=3000)
