@@ -22,7 +22,7 @@ class WantedScraper:
             )
 
             for _ in range(5):
-                time.sleep(5)
+                time.sleep(1)
                 self.page.keyboard.down("End")
 
             content = self.page.content()
@@ -40,7 +40,6 @@ class WantedScraper:
                 {"title": title, "company_name": company_name, "link": link}
             )
 
-        # self.write_to_csv(jobs_data)
         return jobs_data
 
     def write_to_csv(self, jobs_data):
@@ -48,23 +47,23 @@ class WantedScraper:
 
 
 if __name__ == "__main__":
-    # keywords = [
-    #     "flutter",
-    #     "nextjs",
-    #     "kotlin",
-    # ]
-
     app = Flask("JabScrapper")
 
     @app.route("/")
     def home():
         return render_template("home.html")
 
+    db = {}
+
     @app.route("/search")
     def hello():
         keyword = request.args.get("keyword")
-        scraper = WantedScraper(keyword)
-        jobs = scraper.start()
+        if keyword in db:
+            jobs = db[keyword]
+        else:
+            scraper = WantedScraper(keyword)
+            jobs = scraper.start()
+            db[keyword] = jobs
         return render_template("search.html", keyword=keyword, jobs=jobs)
 
     app.run("0.0.0.0", port=3000)
