@@ -61,10 +61,10 @@ if __name__ == "__main__":
 
     @app.route("/")
     def home():
-        return render_template("home.html", name="Geoffrey")
+        return render_template("home.html")
 
-    @app.route("/hello")
+    @app.route("/search")
     def hello():
-        return "hello you!"
+        return render_template("search.html")
 
     app.run("0.0.0.0", port=3000)
